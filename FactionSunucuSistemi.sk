@@ -21,7 +21,7 @@ options:
 # Lütfen Sistemin Güncel Sürümlerinden Haber Almak İçin Alttaki Kısmı Silmeyiniz...
 
 on script load:
-    set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version"
+    set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version.txt"
     if {_Surum} is "1.0":
         send "{@Prefix} xGoktug Faction Sunucu Sisteminiz En Güncel Sürümdedir.." to console
         stop
@@ -33,7 +33,7 @@ on script load:
 on player join:
     if {@Kontrol} is true:
         player is op:
-            set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version"
+            set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version.txt"
             if {_Surum} is "1.0":
                 stop
             else:
