@@ -1,0 +1,237 @@
+#==============================#    
+#                                       
+# xGoktug Faction Sunucu Sistemi    
+# Sürüm 1.0                         
+#                                   
+#==============================#
+
+
+#Ayarlar
+options:
+    Prefix: &5xGoktug &6Faction &2v1.0 &9» &a
+    SunucuAdı: &6Sunucu &5Adınızı &9Yazınız
+    AdminPerm: xgoktug.admin
+    VipPerm: xgoktug.vip
+    Vip+Perm: xgoktug.vipplus
+    RehberPerm: xgoktug.rehber
+    YetkiYokMesajı: &cBu Komut İçin Gerekli Yetkiye Sahip Değilsin.
+    DiscordAdresi: Discord Adresi
+    SkypeAdresi: live:Skype Adresiniz
+    
+# Lütfen Sistemin Güncel Sürümlerinden Haber Almak İçin Alttaki Kısmı Silmeyiniz...
+
+on script load:
+    set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version"
+    if {_Surum} is "1.0":
+        send "{@Prefix} xGoktug Faction Sunucu Sisteminiz En Güncel Sürümdedir.." to console
+        stop
+    else:
+        send "{@Prefix} xGoktug Faction Sunucu Sisteminiz Güncel Değil." to console
+        send "&dhttps://github.com/goktugarikci/Faction-Sunucu-Sistemi &cAdresinden Yeni Sürümü Yükleyiniz" to console
+        stop
+
+on player join:
+    if {@Kontrol} is true:
+        player is op:
+            set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version"
+            if {_Surum} is "1.0":
+                stop
+            else:
+                send "{@Prefix} xGoktug Faction Sunucu Sisteminiz Güncel Değil." to player
+                send "{@Prefix} Lütfen https://goo.gl/FSEYT4 Adresine Ziyaret Ederek Güncel Sürümü İndiriniz."
+#-----------------------------------------------------------------------------------------------
+
+
+#Giriş Mesajları
+
+on join:
+    loop 100 times:
+        message "&f"
+    message "&7&m------ {@SunucuAdı} &7&m------"
+    message "&f"
+    message "&9» &6Sunucuya Hoş Geldin &2%player%"
+    message "&f"
+    message "&9» &6Eğer Sunucuya İlk Defa Katıldıysan &5/Hediye &6Yazmayı Unutma"
+    message "&4Duyuru &9» &r%{Duyuru}%"
+    message "&3Discord Sunucumuza Bekleriz {@DiscordAdresi}"
+    message "&3Skype İletişim&7: {@SkypeAdresi}"
+    message "&f"
+    message "&2İyi Eylenceler Dileriz"
+    message "&f"
+    
+on first join:
+    loop 100 times:
+        message "&f"
+    message "&7&m------ {@SunucuAdı} &7&m------"
+    message "&f"
+    message "&9» &6Sunucuya Hoş Geldin &2%player%"
+    message "&f"
+    message "&9» &6Eğer Sunucuya İlk Defa Katıldıysan &5/Hediye &6Yazmayı Unutma"
+    message "&9» &4Duyuru &9» &r%{Duyuru}%"
+    message "&9» &3Discord Sunucumuza Bekleriz {@DiscordAdresi}"
+    message "&9» &3Skype İletişim&7: {@SkypeAdresi}"
+    message "&f"
+    message "&2İyi Eylenceler Dileriz"
+    message "&f"
+#-----------------------------------------------------------------------------------------------
+    
+
+ 
+#Giriş Mesajındaki Duyuruyu Ayarlama
+command /duyuruayarla [<text>]:
+	permission: {@AdminPerm}
+	permission message: {@YetkiYokMesajı}
+	trigger:
+		if arg-1 is not set:
+			message "{@Prefix} &3Kullanımı: &e/DuyuruAyarla &2<Duyuru>      &7(Duyurunuzu Yazarken Minecraftın Renk Kodlarını Kullanabilirsiniz [&9RenkKodu: & &7])" 
+		if arg-1 is set:
+			set {Duyuru} to colored arg-1
+			message "{@Prefix} &eYeni Duyuru Bu Şekilde &r%colored arg 1%"
+#-----------------------------------------------------------------------------------------------
+
+
+#Ping Öğrenme
+command /ping [<offlineplayer>]:
+	trigger:
+		if arg-1 is not set:
+			message "{@Prefix} &eSenin Pingin&8: &6%player's ping%&eMS&8."
+		if arg-1 is set:
+			if player has permission "{@AdminPerm}":
+				message "{@Prefix} &c%arg 1%&e Adlı Oyuncunun Pingi&8: &6%arg 1's ping%&eMS&8."
+			else:
+				message "{@YetkiYokMesajı}"
+#-----------------------------------------------------------------------------------------------
+
+#Spawn 	
+options:
+    p:&c&lSpawn &r&d» 
+on join:
+    teleport player to {spawn}
+on first join:
+    teleport player to {spawn}
+command /setspawn:
+    permission: {@AdminPerm}
+    trigger:
+        set {spawn} to player's location
+        send "{@Prefix} &6&lDoğma Yeri Ayarlandi."
+        execute player command "/esetspawn"
+        execute player command "/authme setspawn"
+        stop			
+#-----------------------------------------------------------------------------------------------
+
+#Server Motd (Sunucu Listesinde Nasıl Görüneceği Ne Yazacağını Oyun İçinden Ayarla) 
+on server list ping:
+	set max player count to 32
+	if {motd} is set:
+		set motd to "%{motd}%"
+	if {motd} is not set:
+		set motd to "&5xGoktug &6Faction Sunucu Sistemi &2v1.0"
+				
+command /motd [<text>]:
+	permission: {@AdminPerm}
+	permission message: {@YetkiYokMesajı}
+	aliases: /servermotd
+	trigger:
+		if arg-1 is not set:
+			message "{@p} &3Kullanımı &e/motd <Görünmesini İstediğiniz Yazı>"
+		if arg-1 is set:
+			set {motd} to colored arg 1
+			message "{@p} &eYeni Motd &r%colored arg 1%"
+#-----------------------------------------------------------------------------------------------
+
+#Hediye 
+command /hediye:
+    trigger:
+        if {hediye.%player%} is not set:
+            message "{@Prefix} Hediyeni Aldın Unutma Bu Tek Seferlik Alınabilir.."
+            give 1 diamond pickaxe of efficiency 10 and unbreaking 5 named "&7« &dHediye &7»" to player
+            set {hediye.%player%} to true
+        else:
+            if player has permission "{@AdminPerm}":
+                message "{@Prefix} &c&lEfsanevi Kazmayı &a&lAldın&0&l.&a&lİyi Kazmalar"
+                give 1 diamond pickaxe of efficiency 60 and unbreaking 60 named "&7« &c&lEfso Kazma &7»" to player
+                set {hediye.%player%} to true
+            else:
+                send "{@Prefix} &cHediye Sadece Tek Seferlik Kullanılabilir Demiştim &6;)"
+#-----------------------------------------------------------------------------------------------
+
+#Günlük Para Tabelası
+on rightclick on sign:
+    if line 1 of the clicked block is "&6&lGünlük":
+        if line 2 of the clicked block is "":
+            if line 3 of the clicked block is "&7Hediye":
+                if line 4 of the clicked block is "":
+                    set {_difference} to difference between {izin.%player%} and now
+                    if {_difference} is less than 24 hours:
+                        set  {_difference} to difference between {_difference} and 24 hours
+                        message "&6&lGünlük Hediye &9&l>>> &7Bir Dahaki Günlük Hediyen İçin %{_difference}% beklemelisin."
+                        cancel event
+                    else:
+                        set {izin.%player%} to now
+                        message "&6&lGünlük Hediye &9&l>>> &7Günlük 50.000 TL Hediyeni Aldın."
+                        add 50000 to player's balance
+                        
+# Tabelayı Oluşturmak için
+# 1. Satırına &6&lGünlük
+# 2. Satırı Boş
+# 3. Satırına &7Hediye
+# 4. Satırı Boş
+# Olacak Şekilde Oluşturabilirsiniz.. 
+#-----------------------------------------------------------------------------------------------
+
+#Sohbeti Temizleme
+command /sohbetitemizle:
+    permission: {@RehberPerm}
+    permission message: {@prefix} &4Bu Komutu Kullanımazsın
+    trigger:
+        loop 250 times:
+            broadcast "&f"
+        broadcast "{@Prefix} Sohbet Temizlendi İyi Oyunlar.."
+#-----------------------------------------------------------------------------------------------
+
+#Oylama Skripti
+
+command /oylama <integer> <text>:
+    permission: {@AdminPerm}
+    usage: &b/oylama &3<&bSure&3> <&bKonu&3>
+    trigger:
+        set {yes} to 0
+        set {no} to 0
+        loop all players:
+            set {oyla.%loop-player%} to false
+        broadcast "{@Prefix} &c%player% &8adli oyuncu oylama başlattı."
+        broadcast "&9&lKonu: &6%arg-2%"
+        broadcast "{@Prefix} &7Kabul etmek için,&a/evet&7,reddetmek için &c/hayır &7yazınız."
+        broadcast "&9&lSüre &7Oylamanin bitmesine kalan süre &2%arg-1%&7 saniye"
+        set {OylamaBitis} to true
+        loop arg-1 times:
+            wait 1 second
+        broadcast "{@Prefix} &6Oylama tamamlandi"
+        broadcast "{@Prefix} &aEvet&7 sayısı &6%{yes}%"
+        broadcast "{@Prefix} &cHayır&7 sayısı &6%{no}%"
+        set {OylamaBitis} to false
+#Evet Komutu
+command /evet:
+    trigger:
+        if {OylamaBitis} is true:
+            if {oyla.%player%} is false:
+                add 1 to {yes}
+                message "{@Prefix} &3Oyunuzu başarıyla kullandınız"
+                set {oyla.%player%} to true
+            else:
+                message "{@Prefix} &cZaten oyunuzu kullanmışsınız."
+        else:
+            message "{@Prefix} &cŞuanda bir oylama yok"
+#Hayır Komutu
+command /hayır:
+    trigger:
+        if {OylamaBitis} is true:
+            if {oyla.%player%} is false:
+                add 1 to {no}
+                message "{@Prefix} &3Oyunuzu başarıyla kullandınız"
+                set {oyla.%player%} to true
+            else:
+                message "{@Prefix} &cZaten oyunuzu kullanmışsınız."
+        else:
+            message "{@Prefix} &cŞuanda bir oylama yok"
+#-----------------------------------------------------------------------------------------------
