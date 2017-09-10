@@ -6,6 +6,18 @@
 #==============================#
 
 
+#-----------------------------------------------------------------------------------------------
+# Özel Hediye Kutusunu Craftlama Yaptım Bunun Nasıl Craflarız Diye
+# Soranlara Anlatıyım
+#
+# Zümrüt  Lapis   Zümrüt
+# Elmas   Sandık  Elmas        Hediye Kutusunu Verir
+# Zümrüt  Lapis   Zümrüt
+#  
+# Eğer Yazdığım Şekilde Eşyaları Çalışma Masasına Koyarsanız Süpriz Kutu Gerçekleşir. 
+#-----------------------------------------------------------------------------------------------
+
+
 #Ayarlar
 options:
     Prefix: &5xGoktug &6Faction &2v1.0 &9» &a
@@ -15,30 +27,39 @@ options:
     Vip+Perm: xgoktug.vipplus
     RehberPerm: xgoktug.rehber
     YetkiYokMesajı: &cBu Komut İçin Gerekli Yetkiye Sahip Değilsin.
-    DiscordAdresi: Discord Adresi
-    SkypeAdresi: live:Skype Adresiniz
+    DiscordAdresi: Discord.com
+    SkypeAdresi: live:galatasaray2002-@hotmail.com
+    Ilk_Giris_Mesaji: &7[&3&l+&7] &9» &6%player% Sunucumuza Hoş Geldin.
+    Giris_Mesaji: &7[&3&l+&7] &9» &a%player% Sunucumuza Tekrar Hoş Geldin.
+    Cikis_Mesaji: &7[&4&l-&7] &9» &c%player% Görüşmek Üzere.
     
 # Lütfen Sistemin Güncel Sürümlerinden Haber Almak İçin Alttaki Kısmı Silmeyiniz...
 
 on script load:
     set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version.txt"
     if {_Surum} is "1.0":
+        wait 1.0 second
         send "{@Prefix} xGoktug Faction Sunucu Sisteminiz En Güncel Sürümdedir.." to console
         stop
     else:
+        wait 1.0 second
         send "{@Prefix} xGoktug Faction Sunucu Sisteminiz Güncel Değil." to console
         send "&dhttps://github.com/goktugarikci/Faction-Sunucu-Sistemi &cAdresinden Yeni Sürümü Yükleyiniz" to console
+        send "{@Prefix} Yeni Çıkan Sürüm %{_Surum}%" to console
         stop
 
-on player join:
-    if {@Kontrol} is true:
-        player is op:
-            set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version.txt"
-            if {_Surum} is "1.0":
-                stop
-            else:
-                send "{@Prefix} xGoktug Faction Sunucu Sisteminiz Güncel Değil." to player
-                send "{@Prefix} Lütfen https://goo.gl/FSEYT4 Adresine Ziyaret Ederek Güncel Sürümü İndiriniz."
+on join:
+    player is op:
+        set {_Surum} to text from url "https://raw.githubusercontent.com/goktugarikci/Faction-Sunucu-Sistemi/master/Version.txt"
+        if {_Surum} is "1.0":
+            wait 1.0 second
+            send "{@Prefix} Bu Sistemi Kullandığınız İçin Teşekkür Ederiz Ve Sistemi Güncel Tuttuğunuz İçin." to player
+            stop
+        else:
+            wait 1.0 second
+            send "{@Prefix} xGoktug Faction Sunucu Sisteminiz Güncel Değil." to player
+            send "{@Prefix} Lütfen https://goo.gl/FSEYT4 Adresine Ziyaret Ederek Güncel Sürümü İndiriniz." to player
+            send "{@Prefix} Yeni Çıkan Sürüm %{_Surum}%" to player
 #-----------------------------------------------------------------------------------------------
 
 
@@ -68,8 +89,8 @@ on first join:
     message "&f"
     message "&9» &6Eğer Sunucuya İlk Defa Katıldıysan &5/Hediye &6Yazmayı Unutma"
     message "&9» &4Duyuru &9» &r%{Duyuru}%"
-    message "&9» &3Discord Sunucumuza Bekleriz {@DiscordAdresi}"
-    message "&9» &3Skype İletişim&7: {@SkypeAdresi}"
+    message "&9» &3Discord Sunucumuza Bekleriz &a{@DiscordAdresi}"
+    message "&9» &3Skype İletişim&7: &a{@SkypeAdresi}"
     message "&f"
     message "&2İyi Eylenceler Dileriz"
     message "&f"
@@ -103,8 +124,7 @@ command /ping [<offlineplayer>]:
 #-----------------------------------------------------------------------------------------------
 
 #Spawn 	
-options:
-    p:&c&lSpawn &r&d» 
+ 
 on join:
     teleport player to {spawn}
 on first join:
@@ -133,10 +153,10 @@ command /motd [<text>]:
 	aliases: /servermotd
 	trigger:
 		if arg-1 is not set:
-			message "{@p} &3Kullanımı &e/motd <Görünmesini İstediğiniz Yazı>"
+			message "{@Prefix} &3Kullanımı &e/motd <Görünmesini İstediğiniz Yazı>"
 		if arg-1 is set:
 			set {motd} to colored arg 1
-			message "{@p} &eYeni Motd &r%colored arg 1%"
+			message "{@Prefix} &eYeni Motd &r%colored arg 1%"
 #-----------------------------------------------------------------------------------------------
 
 #Hediye 
@@ -145,11 +165,21 @@ command /hediye:
         if {hediye.%player%} is not set:
             message "{@Prefix} Hediyeni Aldın Unutma Bu Tek Seferlik Alınabilir.."
             give 1 diamond pickaxe of efficiency 10 and unbreaking 5 named "&7« &dHediye &7»" to player
+            give 4 paper of protection 1 named "&9&l&m-----{&r &eÇek &750K &9&l&m}-----" with lore "Sağ Tık İle Para Hesabınıza Gider." to player
+            give 10 clay ball of protection 1 named "&6Tılsım &4[Güç]" to player
+            give 10 clay ball of protection 1 named "&6Tılsım &3[Hız]" to player
+            give 10 clay ball of protection 1 named "&6Tılsım &2[Acele]" to player
+            give 10 clay ball of protection 1 named "&6Tılsım &f[Zıplama]" to player
             set {hediye.%player%} to true
         else:
             if player has permission "{@AdminPerm}":
-                message "{@Prefix} &c&lEfsanevi Kazmayı &a&lAldın&0&l.&a&lİyi Kazmalar"
-                give 1 diamond pickaxe of efficiency 60 and unbreaking 60 named "&7« &c&lEfso Kazma &7»" to player
+                message "{@Prefix} Hediye Kitini Aldın"
+                give 1 diamond pickaxe of efficiency 10 and unbreaking 5 named "&7« &dHediye &7»" to player
+                give 4 paper of protection 1 named "&9&l&m-----{&r &eÇek &750K &9&l&m}-----" with lore "Sağ Tık İle Para Hesabınıza Gider." to player
+                give 10 clay ball of protection 1 named "&6Tılsım &4[Güç]" to player
+                give 10 clay ball of protection 1 named "&6Tılsım &3[Hız]" to player
+                give 10 clay ball of protection 1 named "&6Tılsım &2[Acele]" to player
+                give 10 clay ball of protection 1 named "&6Tılsım &f[Zıplama]" to player
                 set {hediye.%player%} to true
             else:
                 send "{@Prefix} &cHediye Sadece Tek Seferlik Kullanılabilir Demiştim &6;)"
@@ -168,8 +198,8 @@ on rightclick on sign:
                         cancel event
                     else:
                         set {izin.%player%} to now
-                        message "&6&lGünlük Hediye &9&l>>> &7Günlük 50.000 TL Hediyeni Aldın."
-                        add 50000 to player's balance
+                        message "&6&lGünlük Hediye &9&l>>> &7Günlük 10.000 TL Hediyeni Aldın."
+                        add 10000 to player's balance
                         
 # Tabelayı Oluşturmak için
 # 1. Satırına &6&lGünlük
@@ -182,7 +212,7 @@ on rightclick on sign:
 #Sohbeti Temizleme
 command /sohbetitemizle:
     permission: {@RehberPerm}
-    permission message: {@prefix} &4Bu Komutu Kullanımazsın
+    permission message: {@Prefix} &4Bu Komutu Kullanımazsın
     trigger:
         loop 250 times:
             broadcast "&f"
@@ -235,3 +265,214 @@ command /hayır:
         else:
             message "{@Prefix} &cŞuanda bir oylama yok"
 #-----------------------------------------------------------------------------------------------
+
+#Çek Türü Para
+on right click:
+    if player's tool is a paper:
+        if name of player's tool is "&9&l&m-----{&r &eÇek &750K &9&l&m}-----":
+            wait 0.1 seconds
+            message "&e&lÇek Sistemi &7&l» &aÇekiniz Hesabınıza Yatırılıyor..."
+            remove 1 paper of protection 1 named "&9&l&m-----{&r &eÇek &750K &9&l&m}-----" with lore "Sağ Tık İle Para Hesabınıza Gider." from player
+            wait 3 seconds
+            message "&e&lÇek Sistemi &7&l» &aÇekiniz Hesabınıza Yatırıldı."
+            add 50000 to player's balance
+command /çekal:
+    permission: {@AdminPerm}
+    trigger:
+        give 10 paper of protection 1 named "&9&l&m-----{&r &eÇek &750K &9&l&m}-----" with lore "Sağ Tık İle Para Hesabınıza Gider." to player
+#-----------------------------------------------------------------------------------------------
+
+#Crash Koruması
+on chat:
+	replace all "İ﻿", "İ" with "&4#/@*" in the message   
+#-----------------------------------------------------------------------------------------------         
+
+#Sunucuda Giriş Çıkış Ve Ölünce Olacak Olaylar.    
+on quit:
+    set quit message to "{@Cikis_Mesaji}"
+on join:
+    teleport player to {spawn}
+    set join message to "{@Giris_Mesaji}"
+on first join:
+    teleport player to {spawn}
+    set join message to "{@Ilk_Giris_Mesaji}"
+#-----------------------------------------------------------------------------------------------    
+
+#Yerdeki İtemleri Temizleme
+command /cleardrops:
+    permission message: {@YetkiYokMesajı}
+    permission: {@AdminPerm}
+    trigger:
+        clear all entities
+        message "&6Yerdeki Tüm Eşyalar Silindi"
+#-----------------------------------------------------------------------------------------------    
+
+#Lagg Clear Skripti 10 Dk Bir Ara
+every 597 second:
+    broadcast "{@Prefix} &a10 Dakikalık Lag Temizlemesine Son 3 Saniye"
+    wait 1 second
+    broadcast "{@Prefix} &aSon 2 Saniye"
+    wait 1 second
+    broadcast "{@Prefix} &aSon 1 Saniye"
+    wait 1 second
+    broadcast "{@Prefix} &aLag Temizlendi"
+    clear all entities          
+#-----------------------------------------------------------------------------------------------    
+
+# - Tılsım Skripti v1.5 - #
+
+command /tılsım [<text>] [<text>] [<number>]:
+    permission: admin.tılsım
+    trigger:
+        if arg-1 is not set:
+            message "&f"
+            message "&7&l---------- &9[&3 Tılsım &9] &7&l----------"
+            message "&f"
+            message "&6     Kullanımı &7» &3/tılsım <list>"
+            message "&6     Kullanımı &7» &3/tılsım <al> <tılsım-adı> <miktar>"
+            message "&6     Kullanımı &7» &3/tılsım <sıfırla> <Oyuncu (isteğe bağlı)>"
+            stop
+        if arg-1 is "list":
+            if arg-2 is not set:
+                if arg-3 is not set:
+                    message "&7&l---------- &9[&3 Tılsım &9] &7&l----------"
+                    message "&f"
+                    message "&6     » &4Güç"
+                    message "&6     » &3Hız"
+                    message "&6     » &2Acele"
+                    message "&6     » &fZıplama"
+                    message "&f"
+                    message "&9» Toplamda 4 Tane Tılsım Vardır."
+                    stop
+        if arg-1 is "sıfırla":
+            if arg-2 is not set:
+                message "&6[Tılsım] &7Tılsım Süresi Sıfırlandı."
+                set {tılsım.%player%} to 0
+                stop
+            if arg-2 is set:
+                message "&6[Tılsım] &7Tılsım Süresi Sıfırlandı. &2(%arg-2%)"
+                set {tılsım.%arg-2%} to 0
+                stop
+        if arg-1 is "al":
+            if arg-2 is not set:
+                message "&6[Tılsım] &cLütfen Tılsım Adı Girin."
+            if arg-2 is "güç":
+                message "&6[Tılsım] &7Güç Tılsımı Aldın."
+                give 1 clay ball of protection 1 named "&6Tılsım &4[Güç]" to player
+                stop
+            if arg-2 is "hız":
+                message "&6[Tılsım] &7Hız Tılsımı Aldın."
+                give 1 clay ball of protection 1 named "&6Tılsım &3[Hız]" to player
+                stop
+            if arg-2 is "acele":
+                message "&6[Tılsım] &7Acele Tılsımı Aldın."
+                give 1 clay ball of protection 1 named "&6Tılsım &2[Acele]" to player
+                stop
+            if arg-2 is "zıplama":
+                message "&6[Tılsım] &7Zıplama Tılsımı Aldın."
+                give 1 clay ball of protection 1 named "&6Tılsım &f[Zıplama]" to player
+                stop
+on rightclick with clay ball:
+    if name of tool is "&6Tılsım &4[Güç]":
+        if {tılsım.%player%} is greater than 0:
+            send "&6[Tılsım] &cDiğer Tılsım Bitmeden Başka Tılsım Kullanamazsın." to player
+        else:
+            remove 1 clay ball named "&6Tılsım &4[Güç]" from player
+            set {tılsım.%player%} to 1
+            send "&6[Tılsım] &2Güç Tılsımı Aktif." to player
+            apply power 2 to player for 120 seconds 
+            play raw sound "random.pop" at player with pitch 1 volume 2
+            wait 1 minute
+            message "&6[Tılsım] &cGüç Tılsımı Bitmiştir."
+            set {tılsım.%player%} to 0
+            stop
+    if name of tool is "&6Tılsım &3[Hız]":
+        if {tılsım.%player%} is greater than 0:
+            send "&6[Tılsım] &cDiğer Tılsım Bitmeden Başka Tılsım Kullanamazsın." to player
+        else:
+            remove 1 clay ball named "&6Tılsım &3[Hız]" from player
+            set {tılsım.%player%} to 1
+            send "&6[Tılsım] &2Hız Tılsımı Aktif." to player
+            apply speed 2 to player for 120 second
+            play raw sound "random.pop" at player with pitch 1 volume 2
+            wait 1 minute
+            message "&6[Tılsım] &cHız Tılsımı Bitmiştir."
+            set {tılsım.%player%} to 0
+            stop
+    if name of tool is "&6Tılsım &2[Acele]":
+        if {tılsım.%player%} is greater than 0:
+            send "&6[Tılsım] &cDiğer Tılsım Bitmeden Başka Tılsım Kullanamazsın." to player
+        else:
+            remove 1 clay ball named "&6Tılsım &2[Acele]" from player
+            set {tılsım.%player%} to 1
+            send "&6[Tılsım] &2Acele Tılsımı Aktif." to player
+            apply haste 2 to player for 120 second
+            play raw sound "random.pop" at player with pitch 1 volume 2
+            wait 1 minute
+            message "&6[Tılsım] &cAcele Tılsımı Bitmiştir."
+            set {tılsım.%player%} to 0
+            stop
+    if name of tool is "&6Tılsım &f[Zıplama]":
+        if {tılsım.%player%} is greater than 0:
+            send "&6[Tılsım] &cDiğer Tılsım Bitmeden Başka Tılsım Kullanamazsın." to player
+        else:
+            remove 1 clay ball named "&6Tılsım &f[Zıplama]" from player
+            set {tılsım.%player%} to 1
+            send "&6[Tılsım] &2Zıplama Tılsımı Aktif." to player
+            apply jump 2 to player for 120 second
+            play raw sound "random.pop" at player with pitch 1 volume 2
+            wait 1 minute
+            message "&6[Tılsım] &cZıplama Tılsımı Bitmiştir."
+            set {tılsım.%player%} to 0
+            stop
+#-----------------------------------------------------------------------------------------------
+   
+# -=- Hediye Kutusu Craft Sistemi ile -=- #
+  
+# Özel Hediye Kutusunu Craftlama Yaptım Bunun Nasıl Craflarız Diye
+# Soranlara Anlatıyım
+#
+# Zümrüt  Lapis   Zümrüt
+# Elmas   Sandık  Elmas        Hediye Kutusunu Verir
+# Zümrüt  Lapis   Zümrüt
+#  
+# Eğer Yazdığım Şekilde Eşyaları Çalışma Masasına Koyarsanız Süpriz Kutu Gerçekleşir.  
+  
+on load:
+    set {hediye_kutusu_lapis} to chest of unbreaking 1 named "&7&l« &e&lHediye Kutusu &7&l»"
+    register new shaped recipe for {hediye_kutusu_lapis} using emerald, lapis, emerald, diamond, chest, diamond, emerald, lapis, emerald   
+on place of chest:
+    if name of player's tool is "&7&l« &e&lHediye Kutusu &7&l»":
+        cancel event  
+on right click:
+    if player's tool is a chest:
+        if name of player's tool is "&7&l« &e&lHediye Kutusu &7&l»":
+            remove 1 chest named "&7&l« &e&lHediye Kutusu &7&l»" from player
+            message "{@Prefix} &7Hediye Kutusu Açılıyor ...."
+            wait 50 tick
+            chance of 20%:
+                give 128 lapis to player
+                message "{@Prefix} &7640 Tane Lapis Kazandın"
+            else:
+                chance of 5%:
+                    give 5 chest of unbreaking 1 named "&7&l« &e&lHediye Kutusu &7&l»" to player
+                    message "{@Prefix} &75 Tane &7&l« &e&lHediye Kutusu &7&l» &7Kazandın."
+                else:
+                    chance of 15%:
+                        give 48 diamond to player
+                        message "{@Prefix} &764 Tane Elmas Kazandın."
+                    else:
+                        chance of 13%:
+                            give 32 emerald to player
+                            message "{@Prefix} &748 Tane Zümrüt Kazandın."
+                        else:
+                            chance of 17%:
+                                give 64 iron ingot to player
+                                message "{@Prefix} &7128 Tane Demir Külçesi Kazandın."
+                            else:
+                                message "{@Prefix} &cKutudan Hiç Birşey Çıkaramadın."
+#-----------------------------------------------------------------------------------------------
+                                
+command /fss reload:
+    trigger:
+        execute player command "/skript reload %script%"
